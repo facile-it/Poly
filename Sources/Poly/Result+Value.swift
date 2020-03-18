@@ -12,7 +12,7 @@ internal extension Swift.Result {
         }
         return val
     }
-
+    
     var error: Failure? {
         guard case .failure(let err) = self else {
             return nil
