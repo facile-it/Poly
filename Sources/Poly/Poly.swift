@@ -48,6 +48,8 @@ public protocol Poly {
     static var allTypes: [Any.Type] { get }
 }
 
+fileprivate let noneValue: Void = Void()
+
 // MARK: - 0 types
 public protocol _Poly0: Poly { }
 public struct Poly0: _Poly0 {
@@ -78,12 +80,11 @@ public extension _Poly1 {
 /// See `Poly` for documentation
 public enum Poly1<A>: _Poly1 {
     case a(A)
+    case none
     
     public var a: A? {
-        switch self {
-        case .a(let ret):
-            return ret
-        }
+        guard case let .a(ret) = self else { return nil }
+        return ret
     }
     
     public init(_ a: A) {
@@ -93,6 +94,7 @@ public enum Poly1<A>: _Poly1 {
     public var value: Any {
         switch self {
         case .a(let ret): return ret
+        case .none: return noneValue
         }
     }
 }
@@ -122,6 +124,7 @@ public typealias Either = Poly2
 public enum Poly2<A, B>: _Poly2 {
     case a(A)
     case b(B)
+    case none
     
     public var a: A? {
         guard case let .a(ret) = self else { return nil }
@@ -145,6 +148,7 @@ public enum Poly2<A, B>: _Poly2 {
         switch self {
         case .a(let ret): return ret
         case .b(let ret): return ret
+        case .none: return noneValue
         }
     }
 }
@@ -172,6 +176,7 @@ public enum Poly3<A, B, C>: _Poly3 {
     case a(A)
     case b(B)
     case c(C)
+    case none
     
     public var a: A? {
         guard case let .a(ret) = self else { return nil }
@@ -205,6 +210,7 @@ public enum Poly3<A, B, C>: _Poly3 {
         case .a(let ret): return ret
         case .b(let ret): return ret
         case .c(let ret): return ret
+        case .none: return noneValue
         }
     }
 }
@@ -233,6 +239,7 @@ public enum Poly4<A, B, C, D>: _Poly4 {
     case b(B)
     case c(C)
     case d(D)
+    case none
     
     public var a: A? {
         guard case let .a(ret) = self else { return nil }
@@ -276,6 +283,7 @@ public enum Poly4<A, B, C, D>: _Poly4 {
         case .b(let ret): return ret
         case .c(let ret): return ret
         case .d(let ret): return ret
+        case .none: return noneValue
         }
     }
 }
@@ -305,6 +313,7 @@ public enum Poly5<A, B, C, D, E>: _Poly5 {
     case c(C)
     case d(D)
     case e(E)
+    case none
     
     public var a: A? {
         guard case let .a(ret) = self else { return nil }
@@ -358,6 +367,7 @@ public enum Poly5<A, B, C, D, E>: _Poly5 {
         case .c(let ret): return ret
         case .d(let ret): return ret
         case .e(let ret): return ret
+        case .none: return noneValue
         }
     }
 }
@@ -388,6 +398,7 @@ public enum Poly6<A, B, C, D, E, F>: _Poly6 {
     case d(D)
     case e(E)
     case f(F)
+    case none
     
     public var a: A? {
         guard case let .a(ret) = self else { return nil }
@@ -451,6 +462,7 @@ public enum Poly6<A, B, C, D, E, F>: _Poly6 {
         case .d(let ret): return ret
         case .e(let ret): return ret
         case .f(let ret): return ret
+        case .none: return noneValue
         }
     }
 }
@@ -482,6 +494,7 @@ public enum Poly7<A, B, C, D, E, F, G>: _Poly7 {
     case e(E)
     case f(F)
     case g(G)
+    case none
     
     public var a: A? {
         guard case let .a(ret) = self else { return nil }
@@ -555,6 +568,7 @@ public enum Poly7<A, B, C, D, E, F, G>: _Poly7 {
         case .e(let ret): return ret
         case .f(let ret): return ret
         case .g(let ret): return ret
+        case .none: return noneValue
         }
     }
 }
@@ -587,6 +601,7 @@ public enum Poly8<A, B, C, D, E, F, G, H>: _Poly8 {
     case f(F)
     case g(G)
     case h(H)
+    case none
     
     public var a: A? {
         guard case let .a(ret) = self else { return nil }
@@ -670,6 +685,7 @@ public enum Poly8<A, B, C, D, E, F, G, H>: _Poly8 {
         case .f(let ret): return ret
         case .g(let ret): return ret
         case .h(let ret): return ret
+        case .none: return noneValue
         }
     }
 }
@@ -703,6 +719,7 @@ public enum Poly9<A, B, C, D, E, F, G, H, I>: _Poly9 {
     case g(G)
     case h(H)
     case i(I)
+    case none
     
     public var a: A? {
         guard case let .a(ret) = self else { return nil }
@@ -796,6 +813,7 @@ public enum Poly9<A, B, C, D, E, F, G, H, I>: _Poly9 {
         case .g(let ret): return ret
         case .h(let ret): return ret
         case .i(let ret): return ret
+        case .none: return noneValue
         }
     }
 }
@@ -830,6 +848,7 @@ public enum Poly10<A, B, C, D, E, F, G, H, I, J>: _Poly10 {
     case h(H)
     case i(I)
     case j(J)
+    case none
     
     public var a: A? {
         guard case let .a(ret) = self else { return nil }
@@ -933,6 +952,7 @@ public enum Poly10<A, B, C, D, E, F, G, H, I, J>: _Poly10 {
         case .h(let ret): return ret
         case .i(let ret): return ret
         case .j(let ret): return ret
+        case .none: return noneValue
         }
     }
 }
@@ -968,6 +988,7 @@ public enum Poly11<A, B, C, D, E, F, G, H, I, J, K>: _Poly11 {
     case i(I)
     case j(J)
     case k(K)
+    case none
     
     public var a: A? {
         guard case let .a(ret) = self else { return nil }
@@ -1081,6 +1102,7 @@ public enum Poly11<A, B, C, D, E, F, G, H, I, J, K>: _Poly11 {
         case .i(let ret): return ret
         case .j(let ret): return ret
         case .k(let ret): return ret
+        case .none: return noneValue
         }
     }
 }
@@ -1117,6 +1139,7 @@ public enum Poly12<A, B, C, D, E, F, G, H, I, J, K, L>: _Poly12 {
     case j(J)
     case k(K)
     case l(L)
+    case none
     
     public var a: A? {
         guard case let .a(ret) = self else { return nil }
@@ -1240,6 +1263,7 @@ public enum Poly12<A, B, C, D, E, F, G, H, I, J, K, L>: _Poly12 {
         case .j(let ret): return ret
         case .k(let ret): return ret
         case .l(let ret): return ret
+        case .none: return noneValue
         }
     }
 }
@@ -1277,6 +1301,7 @@ public enum Poly13<A, B, C, D, E, F, G, H, I, J, K, L, M>: _Poly13 {
     case k(K)
     case l(L)
     case m(M)
+    case none
     
     public var a: A? {
         guard case let .a(ret) = self else { return nil }
@@ -1410,6 +1435,7 @@ public enum Poly13<A, B, C, D, E, F, G, H, I, J, K, L, M>: _Poly13 {
         case .k(let ret): return ret
         case .l(let ret): return ret
         case .m(let ret): return ret
+        case .none: return noneValue
         }
     }
 }
@@ -1448,6 +1474,7 @@ public enum Poly14<A, B, C, D, E, F, G, H, I, J, K, L, M, N>: _Poly14 {
     case l(L)
     case m(M)
     case n(N)
+    case none
     
     public var a: A? {
         guard case let .a(ret) = self else { return nil }
@@ -1591,6 +1618,7 @@ public enum Poly14<A, B, C, D, E, F, G, H, I, J, K, L, M, N>: _Poly14 {
         case .l(let ret): return ret
         case .m(let ret): return ret
         case .n(let ret): return ret
+        case .none: return noneValue
         }
     }
 }

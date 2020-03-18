@@ -70,6 +70,8 @@ extension Poly1: Encodable where A: Encodable {
         switch self {
         case .a(let a):
             try container.encode(a)
+        case .none:
+            break
         }
     }
 }
@@ -78,7 +80,15 @@ extension Poly1: Decodable where A: Decodable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         
-        self = .a(try container.decode(A.self))
+        let attempts = [
+            try decode(A.self, from: container).map { Poly1.a($0) }
+        ]
+        
+        self = attempts
+            .lazy
+            .compactMap { $0.value }
+            .first
+            .get(or: .none)
     }
 }
 
@@ -92,6 +102,8 @@ extension Poly2: Encodable where A: Encodable, B: Encodable {
             try container.encode(a)
         case .b(let b):
             try container.encode(b)
+        case .none:
+            break
         }
     }
 }
@@ -104,19 +116,11 @@ extension Poly2: Decodable where A: Decodable, B: Decodable {
             try decode(A.self, from: container).map { Poly2.a($0) },
             try decode(B.self, from: container).map { Poly2.b($0) }]
         
-        let maybeVal: Poly2<A, B>? = attempts
+        self = attempts
             .lazy
             .compactMap { $0.value }
             .first
-        
-        guard let val = maybeVal else {
-            let individualFailures = attempts.map { $0.error }.compactMap { $0 }
-            
-            throw PolyDecodeNoTypesMatchedError(codingPath: decoder.codingPath,
-                                                individualTypeFailures: individualFailures)
-        }
-        
-        self = val
+            .get(or: .none)
     }
 }
 
@@ -132,6 +136,8 @@ extension Poly3: Encodable where A: Encodable, B: Encodable, C: Encodable {
             try container.encode(b)
         case .c(let c):
             try container.encode(c)
+        case .none:
+            break
         }
     }
 }
@@ -145,19 +151,11 @@ extension Poly3: Decodable where A: Decodable, B: Decodable, C: Decodable {
             try decode(B.self, from: container).map { Poly3.b($0) },
             try decode(C.self, from: container).map { Poly3.c($0) }]
         
-        let maybeVal: Poly3<A, B, C>? = attempts
+        self = attempts
             .lazy
             .compactMap { $0.value }
             .first
-        
-        guard let val = maybeVal else {
-            let individualFailures = attempts.map { $0.error }.compactMap { $0 }
-            
-            throw PolyDecodeNoTypesMatchedError(codingPath: decoder.codingPath,
-                                                individualTypeFailures: individualFailures)
-        }
-        
-        self = val
+            .get(or: .none)
     }
 }
 
@@ -175,6 +173,8 @@ extension Poly4: Encodable where A: Encodable, B: Encodable, C: Encodable, D: En
             try container.encode(c)
         case .d(let d):
             try container.encode(d)
+        case .none:
+            break
         }
     }
 }
@@ -189,19 +189,11 @@ extension Poly4: Decodable where A: Decodable, B: Decodable, C: Decodable, D: De
             try decode(C.self, from: container).map { Poly4.c($0) },
             try decode(D.self, from: container).map { Poly4.d($0) }]
         
-        let maybeVal: Poly4<A, B, C, D>? = attempts
+        self = attempts
             .lazy
             .compactMap { $0.value }
             .first
-        
-        guard let val = maybeVal else {
-            let individualFailures = attempts.map { $0.error }.compactMap { $0 }
-            
-            throw PolyDecodeNoTypesMatchedError(codingPath: decoder.codingPath,
-                                                individualTypeFailures: individualFailures)
-        }
-        
-        self = val
+            .get(or: .none)
     }
 }
 
@@ -221,6 +213,8 @@ extension Poly5: Encodable where A: Encodable, B: Encodable, C: Encodable, D: En
             try container.encode(d)
         case .e(let e):
             try container.encode(e)
+        case .none:
+            break
         }
     }
 }
@@ -236,19 +230,11 @@ extension Poly5: Decodable where A: Decodable, B: Decodable, C: Decodable, D: De
             try decode(D.self, from: container).map { Poly5.d($0) },
             try decode(E.self, from: container).map { Poly5.e($0) }]
         
-        let maybeVal: Poly5<A, B, C, D, E>? = attempts
+        self = attempts
             .lazy
             .compactMap { $0.value }
             .first
-        
-        guard let val = maybeVal else {
-            let individualFailures = attempts.map { $0.error }.compactMap { $0 }
-            
-            throw PolyDecodeNoTypesMatchedError(codingPath: decoder.codingPath,
-                                                individualTypeFailures: individualFailures)
-        }
-        
-        self = val
+            .get(or: .none)
     }
 }
 
@@ -270,6 +256,8 @@ extension Poly6: Encodable where A: Encodable, B: Encodable, C: Encodable, D: En
             try container.encode(e)
         case .f(let f):
             try container.encode(f)
+        case .none:
+            break
         }
     }
 }
@@ -286,19 +274,11 @@ extension Poly6: Decodable where A: Decodable, B: Decodable, C: Decodable, D: De
             try decode(E.self, from: container).map { Poly6.e($0) },
             try decode(F.self, from: container).map { Poly6.f($0) }]
         
-        let maybeVal: Poly6<A, B, C, D, E, F>? = attempts
+        self = attempts
             .lazy
             .compactMap { $0.value }
             .first
-        
-        guard let val = maybeVal else {
-            let individualFailures = attempts.map { $0.error }.compactMap { $0 }
-            
-            throw PolyDecodeNoTypesMatchedError(codingPath: decoder.codingPath,
-                                                individualTypeFailures: individualFailures)
-        }
-        
-        self = val
+            .get(or: .none)
     }
 }
 
@@ -322,6 +302,8 @@ extension Poly7: Encodable where A: Encodable, B: Encodable, C: Encodable, D: En
             try container.encode(f)
         case .g(let g):
             try container.encode(g)
+        case .none:
+            break
         }
     }
 }
@@ -339,19 +321,11 @@ extension Poly7: Decodable where A: Decodable, B: Decodable, C: Decodable, D: De
             try decode(F.self, from: container).map { Poly7.f($0) },
             try decode(G.self, from: container).map { Poly7.g($0) }]
         
-        let maybeVal: Poly7<A, B, C, D, E, F, G>? = attempts
+        self = attempts
             .lazy
             .compactMap { $0.value }
             .first
-        
-        guard let val = maybeVal else {
-            let individualFailures = attempts.map { $0.error }.compactMap { $0 }
-            
-            throw PolyDecodeNoTypesMatchedError(codingPath: decoder.codingPath,
-                                                individualTypeFailures: individualFailures)
-        }
-        
-        self = val
+            .get(or: .none)
     }
 }
 
@@ -377,6 +351,8 @@ extension Poly8: Encodable where A: Encodable, B: Encodable, C: Encodable, D: En
             try container.encode(g)
         case .h(let h):
             try container.encode(h)
+        case .none:
+            break
         }
     }
 }
@@ -395,19 +371,11 @@ extension Poly8: Decodable where A: Decodable, B: Decodable, C: Decodable, D: De
             try decode(G.self, from: container).map { Poly8.g($0) },
             try decode(H.self, from: container).map { Poly8.h($0) }]
         
-        let maybeVal: Poly8<A, B, C, D, E, F, G, H>? = attempts
+        self = attempts
             .lazy
             .compactMap { $0.value }
             .first
-        
-        guard let val = maybeVal else {
-            let individualFailures = attempts.map { $0.error }.compactMap { $0 }
-            
-            throw PolyDecodeNoTypesMatchedError(codingPath: decoder.codingPath,
-                                                individualTypeFailures: individualFailures)
-        }
-        
-        self = val
+            .get(or: .none)
     }
 }
 
@@ -435,6 +403,8 @@ extension Poly9: Encodable where A: Encodable, B: Encodable, C: Encodable, D: En
             try container.encode(h)
         case .i(let i):
             try container.encode(i)
+        case .none:
+            break
         }
     }
 }
@@ -454,19 +424,11 @@ extension Poly9: Decodable where A: Decodable, B: Decodable, C: Decodable, D: De
             try decode(H.self, from: container).map { Poly9.h($0) },
             try decode(I.self, from: container).map { Poly9.i($0) }]
         
-        let maybeVal: Poly9<A, B, C, D, E, F, G, H, I>? = attempts
+        self = attempts
             .lazy
             .compactMap { $0.value }
             .first
-        
-        guard let val = maybeVal else {
-            let individualFailures = attempts.map { $0.error }.compactMap { $0 }
-            
-            throw PolyDecodeNoTypesMatchedError(codingPath: decoder.codingPath,
-                                                individualTypeFailures: individualFailures)
-        }
-        
-        self = val
+            .get(or: .none)
     }
 }
 
@@ -496,6 +458,8 @@ extension Poly10: Encodable where A: Encodable, B: Encodable, C: Encodable, D: E
             try container.encode(i)
         case .j(let j):
             try container.encode(j)
+        case .none:
+            break
         }
     }
 }
@@ -516,19 +480,11 @@ extension Poly10: Decodable where A: Decodable, B: Decodable, C: Decodable, D: D
             try decode(I.self, from: container).map { Poly10.i($0) },
             try decode(J.self, from: container).map { Poly10.j($0) }]
         
-        let maybeVal: Poly10<A, B, C, D, E, F, G, H, I, J>? = attempts
+        self = attempts
             .lazy
             .compactMap { $0.value }
             .first
-        
-        guard let val = maybeVal else {
-            let individualFailures = attempts.map { $0.error }.compactMap { $0 }
-            
-            throw PolyDecodeNoTypesMatchedError(codingPath: decoder.codingPath,
-                                                individualTypeFailures: individualFailures)
-        }
-        
-        self = val
+            .get(or: .none)
     }
 }
 
@@ -560,6 +516,8 @@ extension Poly11: Encodable where A: Encodable, B: Encodable, C: Encodable, D: E
             try container.encode(j)
         case .k(let k):
             try container.encode(k)
+        case .none:
+            break
         }
     }
 }
@@ -581,19 +539,11 @@ extension Poly11: Decodable where A: Decodable, B: Decodable, C: Decodable, D: D
             try decode(J.self, from: container).map { Poly11.j($0) },
             try decode(K.self, from: container).map { Poly11.k($0) }]
         
-        let maybeVal: Poly11<A, B, C, D, E, F, G, H, I, J, K>? = attempts
+        self = attempts
             .lazy
             .compactMap { $0.value }
             .first
-        
-        guard let val = maybeVal else {
-            let individualFailures = attempts.map { $0.error }.compactMap { $0 }
-            
-            throw PolyDecodeNoTypesMatchedError(codingPath: decoder.codingPath,
-                                                individualTypeFailures: individualFailures)
-        }
-        
-        self = val
+            .get(or: .none)
     }
 }
 
@@ -627,6 +577,8 @@ extension Poly12: Encodable where A: Encodable, B: Encodable, C: Encodable, D: E
             try container.encode(k)
         case .l(let l):
             try container.encode(l)
+        case .none:
+            break
         }
     }
 }
@@ -649,19 +601,11 @@ extension Poly12: Decodable where A: Decodable, B: Decodable, C: Decodable, D: D
             try decode(K.self, from: container).map { Poly12.k($0) },
             try decode(L.self, from: container).map { Poly12.l($0)}]
         
-        let maybeVal: Poly12<A, B, C, D, E, F, G, H, I, J, K, L>? = attempts
+        self = attempts
             .lazy
             .compactMap { $0.value }
             .first
-        
-        guard let val = maybeVal else {
-            let individualFailures = attempts.map { $0.error }.compactMap { $0 }
-            
-            throw PolyDecodeNoTypesMatchedError(codingPath: decoder.codingPath,
-                                                individualTypeFailures: individualFailures)
-        }
-        
-        self = val
+            .get(or: .none)
     }
 }
 
@@ -697,6 +641,8 @@ extension Poly13: Encodable where A: Encodable, B: Encodable, C: Encodable, D: E
             try container.encode(l)
         case .m(let m):
             try container.encode(m)
+        case .none:
+            break
         }
     }
 }
@@ -720,19 +666,11 @@ extension Poly13: Decodable where A: Decodable, B: Decodable, C: Decodable, D: D
             try decode(L.self, from: container).map { Poly13.l($0)},
             try decode(M.self, from: container).map { Poly13.m($0)}]
         
-        let maybeVal: Poly13<A, B, C, D, E, F, G, H, I, J, K, L, M>? = attempts
+        self = attempts
             .lazy
             .compactMap { $0.value }
             .first
-        
-        guard let val = maybeVal else {
-            let individualFailures = attempts.map { $0.error }.compactMap { $0 }
-            
-            throw PolyDecodeNoTypesMatchedError(codingPath: decoder.codingPath,
-                                                individualTypeFailures: individualFailures)
-        }
-        
-        self = val
+            .get(or: .none)
     }
 }
 
@@ -770,6 +708,8 @@ extension Poly14: Encodable where A: Encodable, B: Encodable, C: Encodable, D: E
             try container.encode(m)
         case .n(let n):
             try container.encode(n)
+        case .none:
+            break
         }
     }
 }
@@ -794,19 +734,11 @@ extension Poly14: Decodable where A: Decodable, B: Decodable, C: Decodable, D: D
             try decode(M.self, from: container).map { Poly14.m($0) },
             try decode(N.self, from: container).map { Poly14.n($0) }]
         
-        let maybeVal: Poly14<A, B, C, D, E, F, G, H, I, J, K, L, M, N>? = attempts
+        self = attempts
             .lazy
             .compactMap { $0.value }
             .first
-        
-        guard let val = maybeVal else {
-            let individualFailures = attempts.map { $0.error }.compactMap { $0 }
-            
-            throw PolyDecodeNoTypesMatchedError(codingPath: decoder.codingPath,
-                                                individualTypeFailures: individualFailures)
-        }
-        
-        self = val
+            .get(or: .none)
     }
 }
 

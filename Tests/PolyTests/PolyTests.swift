@@ -1497,59 +1497,59 @@ extension PolyTests {
 // MARK: - failures
 extension PolyTests {
     func test_Poly1_decode_throws_typeNotFound() {
-        XCTAssertThrowsError(try JSONDecoder().decode(Poly1<TestType1>.self, from: poly_entity2))
+        XCTAssertEqual(try JSONDecoder().decode(Poly1<TestType1>.self, from: poly_entity2), .none)
     }
     
     func test_Poly2_decode_throws_typeNotFound() {
-        XCTAssertThrowsError(try JSONDecoder().decode(Poly2<TestType1, TestType2>.self, from: poly_entity3))
+        XCTAssertEqual(try JSONDecoder().decode(Poly2<TestType1, TestType2>.self, from: poly_entity3), .none)
     }
     
     func test_Poly3_decode_throws_typeNotFound() {
-        XCTAssertThrowsError(try JSONDecoder().decode(Poly3<TestType1, TestType2, TestType3>.self, from: poly_entity4))
+        XCTAssertEqual(try JSONDecoder().decode(Poly3<TestType1, TestType2, TestType3>.self, from: poly_entity4), .none)
     }
     
     func test_Poly4_decode_throws_typeNotFound() {
-        XCTAssertThrowsError(try JSONDecoder().decode(Poly4<TestType1, TestType2, TestType3, TestType4>.self, from: poly_entity5))
+        XCTAssertEqual(try JSONDecoder().decode(Poly4<TestType1, TestType2, TestType3, TestType4>.self, from: poly_entity5), .none)
     }
     
     func test_Poly5_decode_throws_typeNotFound() {
-        XCTAssertThrowsError(try JSONDecoder().decode(Poly5<TestType1, TestType2, TestType3, TestType4, TestType5>.self, from: poly_entity6))
+        XCTAssertEqual(try JSONDecoder().decode(Poly5<TestType1, TestType2, TestType3, TestType4, TestType5>.self, from: poly_entity6), .none)
     }
     
     func test_Poly6_decode_throws_typeNotFound() {
-        XCTAssertThrowsError(try JSONDecoder().decode(Poly6<TestType1, TestType2, TestType3, TestType4, TestType5, TestType6>.self, from: poly_entity7))
+        XCTAssertEqual(try JSONDecoder().decode(Poly6<TestType1, TestType2, TestType3, TestType4, TestType5, TestType6>.self, from: poly_entity7), .none)
     }
     
     func test_Poly7_decode_throws_typeNotFound() {
-        XCTAssertThrowsError(try JSONDecoder().decode(Poly7<TestType1, TestType2, TestType3, TestType4, TestType5, TestType6, TestType7>.self, from: poly_entity8))
+        XCTAssertEqual(try JSONDecoder().decode(Poly7<TestType1, TestType2, TestType3, TestType4, TestType5, TestType6, TestType7>.self, from: poly_entity8), .none)
     }
     
     func test_Poly8_decode_throws_typeNotFound() {
-        XCTAssertThrowsError(try JSONDecoder().decode(Poly8<TestType1, TestType2, TestType3, TestType4, TestType5, TestType6, TestType7, TestType8>.self, from: poly_entity9))
+        XCTAssertEqual(try JSONDecoder().decode(Poly8<TestType1, TestType2, TestType3, TestType4, TestType5, TestType6, TestType7, TestType8>.self, from: poly_entity9), .none)
     }
     
     func test_Poly9_decode_throws_typeNotFound() {
-        XCTAssertThrowsError(try JSONDecoder().decode(Poly9<TestType1, TestType2, TestType3, TestType4, TestType5, TestType6, TestType7, TestType8, TestType9>.self, from: poly_entity10))
+        XCTAssertEqual(try JSONDecoder().decode(Poly9<TestType1, TestType2, TestType3, TestType4, TestType5, TestType6, TestType7, TestType8, TestType9>.self, from: poly_entity10), .none)
     }
     
     func test_Poly10_decode_throws_typeNotFound() {
-        XCTAssertThrowsError(try JSONDecoder().decode(Poly10<TestType1, TestType2, TestType3, TestType4, TestType5, TestType6, TestType7, TestType8, TestType9, TestType10>.self, from: poly_entity11))
+        XCTAssertEqual(try JSONDecoder().decode(Poly10<TestType1, TestType2, TestType3, TestType4, TestType5, TestType6, TestType7, TestType8, TestType9, TestType10>.self, from: poly_entity11), .none)
     }
     
     func test_Poly11_decode_throws_typeNotFound() {
-        XCTAssertThrowsError(try JSONDecoder().decode(Poly11<TestType1, TestType2, TestType3, TestType4, TestType5, TestType6, TestType7, TestType8, TestType9, TestType10, TestType11>.self, from: poly_entity12))
+        XCTAssertEqual(try JSONDecoder().decode(Poly11<TestType1, TestType2, TestType3, TestType4, TestType5, TestType6, TestType7, TestType8, TestType9, TestType10, TestType11>.self, from: poly_entity12), .none)
     }
     
     func test_Poly12_decode_throws_typeNotFound() {
-        XCTAssertThrowsError(try JSONDecoder().decode(Poly12<TestType1, TestType2, TestType3, TestType4, TestType5, TestType6, TestType7, TestType8, TestType9, TestType10, TestType11, TestType12>.self, from: poly_entity13))
+        XCTAssertEqual(try JSONDecoder().decode(Poly12<TestType1, TestType2, TestType3, TestType4, TestType5, TestType6, TestType7, TestType8, TestType9, TestType10, TestType11, TestType12>.self, from: poly_entity13), .none)
     }
     
     func test_Poly13_decode_throws_typeNotFound() {
-        XCTAssertThrowsError(try JSONDecoder().decode(Poly13<TestType1, TestType2, TestType3, TestType4, TestType5, TestType6, TestType7, TestType8, TestType9, TestType10, TestType11, TestType12, TestType13>.self, from: poly_entity14))
+        XCTAssertEqual(try JSONDecoder().decode(Poly13<TestType1, TestType2, TestType3, TestType4, TestType5, TestType6, TestType7, TestType8, TestType9, TestType10, TestType11, TestType12, TestType13>.self, from: poly_entity14), .none)
     }
     
     func test_Poly14_decode_throws_typeNotFound() {
-        XCTAssertThrowsError(try JSONDecoder().decode(Poly14<TestType1, TestType2, TestType3, TestType4, TestType5, TestType6, TestType7, TestType8, TestType9, TestType10, TestType11, TestType12, TestType13, TestType14>.self, from: poly_entity15))
+        XCTAssertEqual(try JSONDecoder().decode(Poly14<TestType1, TestType2, TestType3, TestType4, TestType5, TestType6, TestType7, TestType8, TestType9, TestType10, TestType11, TestType12, TestType13, TestType14>.self, from: poly_entity15), .none)
     }
 }
 
@@ -1687,8 +1687,14 @@ extension Poly3: TestProtocol where A == PolyTests.TestType1, B == PolyTests.Tes
              .b(let x as TestProtocol),
              .c(let x as TestProtocol):
             return x.test
+        case .none:
+            return .empty
         }
     }
+}
+
+extension String {
+    static let empty = ""
 }
 
 let matching_entity = """
