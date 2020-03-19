@@ -43,17 +43,19 @@
 public protocol Poly {
     /// Get a type-erased value.
     var value: Any { get }
-
+    
     /// Get a list of all types this `Poly` supports.
     static var allTypes: [Any.Type] { get }
 }
 
+fileprivate let noneValue: Void = Void()
+
 // MARK: - 0 types
 public protocol _Poly0: Poly { }
 public struct Poly0: _Poly0 {
-
-	public init() {}
-
+    
+    public init() {}
+    
     public var value: Any { return () }
 }
 
@@ -61,38 +63,38 @@ extension Poly0: Equatable {}
 
 // MARK: - 1 type
 public protocol _Poly1: _Poly0 {
-	associatedtype A
-
+    associatedtype A
+    
     /// Get the value if it is of type `A`
-	var a: A? { get }
-
-	init(_ a: A)
+    var a: A? { get }
+    
+    init(_ a: A)
 }
 
 public extension _Poly1 {
-	subscript(_ lookup: A.Type) -> A? {
-		return a
-	}
+    subscript(_ lookup: A.Type) -> A? {
+        return a
+    }
 }
 
 /// See `Poly` for documentation
 public enum Poly1<A>: _Poly1 {
-	case a(A)
-
-	public var a: A? {
-        switch self {
-        case .a(let ret):
-            return ret
-        }
-	}
-
-	public init(_ a: A) {
-		self = .a(a)
-	}
-
+    case a(A)
+    case none
+    
+    public var a: A? {
+        guard case let .a(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ a: A) {
+        self = .a(a)
+    }
+    
     public var value: Any {
         switch self {
         case .a(let ret): return ret
+        case .none: return noneValue
         }
     }
 }
@@ -101,18 +103,18 @@ extension Poly1: Equatable where A: Equatable {}
 
 // MARK: - 2 types
 public protocol _Poly2: _Poly1 {
-	associatedtype B
-
+    associatedtype B
+    
     /// Get the value if it is of type `B`
-	var b: B? { get }
-
-	init(_ b: B)
+    var b: B? { get }
+    
+    init(_ b: B)
 }
 
 public extension _Poly2 {
-	subscript(_ lookup: B.Type) -> B? {
-		return b
-	}
+    subscript(_ lookup: B.Type) -> B? {
+        return b
+    }
 }
 
 /// See `Poly` for documentation
@@ -120,31 +122,33 @@ public typealias Either = Poly2
 
 /// See `Poly` for documentation
 public enum Poly2<A, B>: _Poly2 {
-	case a(A)
-	case b(B)
-
-	public var a: A? {
-		guard case let .a(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ a: A) {
-		self = .a(a)
-	}
-
-	public var b: B? {
-		guard case let .b(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ b: B) {
-		self = .b(b)
-	}
-
+    case a(A)
+    case b(B)
+    case none
+    
+    public var a: A? {
+        guard case let .a(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ a: A) {
+        self = .a(a)
+    }
+    
+    public var b: B? {
+        guard case let .b(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ b: B) {
+        self = .b(b)
+    }
+    
     public var value: Any {
         switch self {
         case .a(let ret): return ret
         case .b(let ret): return ret
+        case .none: return noneValue
         }
     }
 }
@@ -153,58 +157,60 @@ extension Poly2: Equatable where A: Equatable, B: Equatable {}
 
 // MARK: - 3 types
 public protocol _Poly3: _Poly2 {
-	associatedtype C
-
+    associatedtype C
+    
     /// Get the value if it is of type `C`
-	var c: C? { get }
-
-	init(_ c: C)
+    var c: C? { get }
+    
+    init(_ c: C)
 }
 
 public extension _Poly3 {
-	subscript(_ lookup: C.Type) -> C? {
-		return c
-	}
+    subscript(_ lookup: C.Type) -> C? {
+        return c
+    }
 }
 
 /// See `Poly` for documentation
 public enum Poly3<A, B, C>: _Poly3 {
-	case a(A)
-	case b(B)
-	case c(C)
-
-	public var a: A? {
-		guard case let .a(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ a: A) {
-		self = .a(a)
-	}
-
-	public var b: B? {
-		guard case let .b(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ b: B) {
-		self = .b(b)
-	}
-
-	public var c: C? {
-		guard case let .c(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ c: C) {
-		self = .c(c)
-	}
-
+    case a(A)
+    case b(B)
+    case c(C)
+    case none
+    
+    public var a: A? {
+        guard case let .a(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ a: A) {
+        self = .a(a)
+    }
+    
+    public var b: B? {
+        guard case let .b(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ b: B) {
+        self = .b(b)
+    }
+    
+    public var c: C? {
+        guard case let .c(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ c: C) {
+        self = .c(c)
+    }
+    
     public var value: Any {
         switch self {
         case .a(let ret): return ret
         case .b(let ret): return ret
         case .c(let ret): return ret
+        case .none: return noneValue
         }
     }
 }
@@ -213,69 +219,71 @@ extension Poly3: Equatable where A: Equatable, B: Equatable, C:Equatable {}
 
 // MARK: - 4 types
 public protocol _Poly4: _Poly3 {
-	associatedtype D
-
+    associatedtype D
+    
     /// Get the value if it is of type `D`
-	var d: D? { get }
-
-	init(_ d: D)
+    var d: D? { get }
+    
+    init(_ d: D)
 }
 
 public extension _Poly4 {
-	subscript(_ lookup: D.Type) -> D? {
-		return d
-	}
+    subscript(_ lookup: D.Type) -> D? {
+        return d
+    }
 }
 
 /// See `Poly` for documentation
 public enum Poly4<A, B, C, D>: _Poly4 {
-	case a(A)
-	case b(B)
-	case c(C)
-	case d(D)
-
-	public var a: A? {
-		guard case let .a(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ a: A) {
-		self = .a(a)
-	}
-
-	public var b: B? {
-		guard case let .b(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ b: B) {
-		self = .b(b)
-	}
-
-	public var c: C? {
-		guard case let .c(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ c: C) {
-		self = .c(c)
-	}
-
-	public var d: D? {
-		guard case let .d(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ d: D) {
-		self = .d(d)
-	}
-
+    case a(A)
+    case b(B)
+    case c(C)
+    case d(D)
+    case none
+    
+    public var a: A? {
+        guard case let .a(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ a: A) {
+        self = .a(a)
+    }
+    
+    public var b: B? {
+        guard case let .b(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ b: B) {
+        self = .b(b)
+    }
+    
+    public var c: C? {
+        guard case let .c(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ c: C) {
+        self = .c(c)
+    }
+    
+    public var d: D? {
+        guard case let .d(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ d: D) {
+        self = .d(d)
+    }
+    
     public var value: Any {
         switch self {
         case .a(let ret): return ret
         case .b(let ret): return ret
         case .c(let ret): return ret
         case .d(let ret): return ret
+        case .none: return noneValue
         }
     }
 }
@@ -284,73 +292,74 @@ extension Poly4: Equatable where A: Equatable, B: Equatable, C: Equatable, D: Eq
 
 // MARK: - 5 types
 public protocol _Poly5: _Poly4 {
-	associatedtype E
-
+    associatedtype E
+    
     /// Get the value if it is of type `E`
-	var e: E? { get }
-
-	init(_ e: E)
+    var e: E? { get }
+    
+    init(_ e: E)
 }
 
 public extension _Poly5 {
-	subscript(_ lookup: E.Type) -> E? {
-		return e
-	}
+    subscript(_ lookup: E.Type) -> E? {
+        return e
+    }
 }
 
 /// See `Poly` for documentation
 public enum Poly5<A, B, C, D, E>: _Poly5 {
-	case a(A)
-	case b(B)
-	case c(C)
-	case d(D)
-	case e(E)
-
-	public var a: A? {
-		guard case let .a(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ a: A) {
-		self = .a(a)
-	}
-
-	public var b: B? {
-		guard case let .b(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ b: B) {
-		self = .b(b)
-	}
-
-	public var c: C? {
-		guard case let .c(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ c: C) {
-		self = .c(c)
-	}
-
-	public var d: D? {
-		guard case let .d(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ d: D) {
-		self = .d(d)
-	}
-
-	public var e: E? {
-		guard case let .e(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ e: E) {
-		self = .e(e)
-	}
-
+    case a(A)
+    case b(B)
+    case c(C)
+    case d(D)
+    case e(E)
+    case none
+    
+    public var a: A? {
+        guard case let .a(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ a: A) {
+        self = .a(a)
+    }
+    
+    public var b: B? {
+        guard case let .b(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ b: B) {
+        self = .b(b)
+    }
+    
+    public var c: C? {
+        guard case let .c(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ c: C) {
+        self = .c(c)
+    }
+    
+    public var d: D? {
+        guard case let .d(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ d: D) {
+        self = .d(d)
+    }
+    
+    public var e: E? {
+        guard case let .e(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ e: E) {
+        self = .e(e)
+    }
+    
     public var value: Any {
         switch self {
         case .a(let ret): return ret
@@ -358,6 +367,7 @@ public enum Poly5<A, B, C, D, E>: _Poly5 {
         case .c(let ret): return ret
         case .d(let ret): return ret
         case .e(let ret): return ret
+        case .none: return noneValue
         }
     }
 }
@@ -366,83 +376,84 @@ extension Poly5: Equatable where A: Equatable, B: Equatable, C: Equatable, D: Eq
 
 // MARK: - 6 types
 public protocol _Poly6: _Poly5 {
-	associatedtype F
-
+    associatedtype F
+    
     /// Get the value if it is of type `F`
-	var f: F? { get }
-
-	init(_ f: F)
+    var f: F? { get }
+    
+    init(_ f: F)
 }
 
 public extension _Poly6 {
-	subscript(_ lookup: F.Type) -> F? {
-		return f
-	}
+    subscript(_ lookup: F.Type) -> F? {
+        return f
+    }
 }
 
 /// See `Poly` for documentation
 public enum Poly6<A, B, C, D, E, F>: _Poly6 {
-	case a(A)
-	case b(B)
-	case c(C)
-	case d(D)
-	case e(E)
-	case f(F)
-
-	public var a: A? {
-		guard case let .a(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ a: A) {
-		self = .a(a)
-	}
-
-	public var b: B? {
-		guard case let .b(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ b: B) {
-		self = .b(b)
-	}
-
-	public var c: C? {
-		guard case let .c(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ c: C) {
-		self = .c(c)
-	}
-
-	public var d: D? {
-		guard case let .d(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ d: D) {
-		self = .d(d)
-	}
-
-	public var e: E? {
-		guard case let .e(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ e: E) {
-		self = .e(e)
-	}
-
-	public var f: F? {
-		guard case let .f(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ f: F) {
-		self = .f(f)
-	}
-
+    case a(A)
+    case b(B)
+    case c(C)
+    case d(D)
+    case e(E)
+    case f(F)
+    case none
+    
+    public var a: A? {
+        guard case let .a(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ a: A) {
+        self = .a(a)
+    }
+    
+    public var b: B? {
+        guard case let .b(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ b: B) {
+        self = .b(b)
+    }
+    
+    public var c: C? {
+        guard case let .c(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ c: C) {
+        self = .c(c)
+    }
+    
+    public var d: D? {
+        guard case let .d(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ d: D) {
+        self = .d(d)
+    }
+    
+    public var e: E? {
+        guard case let .e(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ e: E) {
+        self = .e(e)
+    }
+    
+    public var f: F? {
+        guard case let .f(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ f: F) {
+        self = .f(f)
+    }
+    
     public var value: Any {
         switch self {
         case .a(let ret): return ret
@@ -451,6 +462,7 @@ public enum Poly6<A, B, C, D, E, F>: _Poly6 {
         case .d(let ret): return ret
         case .e(let ret): return ret
         case .f(let ret): return ret
+        case .none: return noneValue
         }
     }
 }
@@ -459,93 +471,94 @@ extension Poly6: Equatable where A: Equatable, B: Equatable, C: Equatable, D: Eq
 
 // MARK: - 7 types
 public protocol _Poly7: _Poly6 {
-	associatedtype G
-
+    associatedtype G
+    
     /// Get the value if it is of type `G`
-	var g: G? { get }
-
-	init(_ g: G)
+    var g: G? { get }
+    
+    init(_ g: G)
 }
 
 public extension _Poly7 {
-	subscript(_ lookup: G.Type) -> G? {
-		return g
-	}
+    subscript(_ lookup: G.Type) -> G? {
+        return g
+    }
 }
 
 /// See `Poly` for documentation
 public enum Poly7<A, B, C, D, E, F, G>: _Poly7 {
-	case a(A)
-	case b(B)
-	case c(C)
-	case d(D)
-	case e(E)
-	case f(F)
-	case g(G)
-
-	public var a: A? {
-		guard case let .a(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ a: A) {
-		self = .a(a)
-	}
-
-	public var b: B? {
-		guard case let .b(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ b: B) {
-		self = .b(b)
-	}
-
-	public var c: C? {
-		guard case let .c(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ c: C) {
-		self = .c(c)
-	}
-
-	public var d: D? {
-		guard case let .d(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ d: D) {
-		self = .d(d)
-	}
-
-	public var e: E? {
-		guard case let .e(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ e: E) {
-		self = .e(e)
-	}
-
-	public var f: F? {
-		guard case let .f(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ f: F) {
-		self = .f(f)
-	}
-
-	public var g: G? {
-		guard case let .g(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ g: G) {
-		self = .g(g)
-	}
-
+    case a(A)
+    case b(B)
+    case c(C)
+    case d(D)
+    case e(E)
+    case f(F)
+    case g(G)
+    case none
+    
+    public var a: A? {
+        guard case let .a(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ a: A) {
+        self = .a(a)
+    }
+    
+    public var b: B? {
+        guard case let .b(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ b: B) {
+        self = .b(b)
+    }
+    
+    public var c: C? {
+        guard case let .c(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ c: C) {
+        self = .c(c)
+    }
+    
+    public var d: D? {
+        guard case let .d(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ d: D) {
+        self = .d(d)
+    }
+    
+    public var e: E? {
+        guard case let .e(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ e: E) {
+        self = .e(e)
+    }
+    
+    public var f: F? {
+        guard case let .f(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ f: F) {
+        self = .f(f)
+    }
+    
+    public var g: G? {
+        guard case let .g(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ g: G) {
+        self = .g(g)
+    }
+    
     public var value: Any {
         switch self {
         case .a(let ret): return ret
@@ -555,6 +568,7 @@ public enum Poly7<A, B, C, D, E, F, G>: _Poly7 {
         case .e(let ret): return ret
         case .f(let ret): return ret
         case .g(let ret): return ret
+        case .none: return noneValue
         }
     }
 }
@@ -563,103 +577,104 @@ extension Poly7: Equatable where A: Equatable, B: Equatable, C: Equatable, D: Eq
 
 // MARK: - 8 types
 public protocol _Poly8: _Poly7 {
-	associatedtype H
-
+    associatedtype H
+    
     /// Get the value if it is of type `H`
-	var h: H? { get }
-
-	init(_ h: H)
+    var h: H? { get }
+    
+    init(_ h: H)
 }
 
 public extension _Poly8 {
-	subscript(_ lookup: H.Type) -> H? {
-		return h
-	}
+    subscript(_ lookup: H.Type) -> H? {
+        return h
+    }
 }
 
 /// See `Poly` for documentation
 public enum Poly8<A, B, C, D, E, F, G, H>: _Poly8 {
-	case a(A)
-	case b(B)
-	case c(C)
-	case d(D)
-	case e(E)
-	case f(F)
-	case g(G)
-	case h(H)
-
-	public var a: A? {
-		guard case let .a(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ a: A) {
-		self = .a(a)
-	}
-
-	public var b: B? {
-		guard case let .b(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ b: B) {
-		self = .b(b)
-	}
-
-	public var c: C? {
-		guard case let .c(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ c: C) {
-		self = .c(c)
-	}
-
-	public var d: D? {
-		guard case let .d(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ d: D) {
-		self = .d(d)
-	}
-
-	public var e: E? {
-		guard case let .e(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ e: E) {
-		self = .e(e)
-	}
-
-	public var f: F? {
-		guard case let .f(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ f: F) {
-		self = .f(f)
-	}
-
-	public var g: G? {
-		guard case let .g(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ g: G) {
-		self = .g(g)
-	}
-
-	public var h: H? {
-		guard case let .h(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ h: H) {
-		self = .h(h)
-	}
-
+    case a(A)
+    case b(B)
+    case c(C)
+    case d(D)
+    case e(E)
+    case f(F)
+    case g(G)
+    case h(H)
+    case none
+    
+    public var a: A? {
+        guard case let .a(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ a: A) {
+        self = .a(a)
+    }
+    
+    public var b: B? {
+        guard case let .b(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ b: B) {
+        self = .b(b)
+    }
+    
+    public var c: C? {
+        guard case let .c(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ c: C) {
+        self = .c(c)
+    }
+    
+    public var d: D? {
+        guard case let .d(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ d: D) {
+        self = .d(d)
+    }
+    
+    public var e: E? {
+        guard case let .e(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ e: E) {
+        self = .e(e)
+    }
+    
+    public var f: F? {
+        guard case let .f(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ f: F) {
+        self = .f(f)
+    }
+    
+    public var g: G? {
+        guard case let .g(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ g: G) {
+        self = .g(g)
+    }
+    
+    public var h: H? {
+        guard case let .h(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ h: H) {
+        self = .h(h)
+    }
+    
     public var value: Any {
         switch self {
         case .a(let ret): return ret
@@ -670,6 +685,7 @@ public enum Poly8<A, B, C, D, E, F, G, H>: _Poly8 {
         case .f(let ret): return ret
         case .g(let ret): return ret
         case .h(let ret): return ret
+        case .none: return noneValue
         }
     }
 }
@@ -678,113 +694,114 @@ extension Poly8: Equatable where A: Equatable, B: Equatable, C: Equatable, D: Eq
 
 // MARK: - 9 types
 public protocol _Poly9: _Poly8 {
-	associatedtype I
-
+    associatedtype I
+    
     /// Get the value if it is of type `I`
-	var i: I? { get }
-
-	init(_ i: I)
+    var i: I? { get }
+    
+    init(_ i: I)
 }
 
 public extension _Poly9 {
-	subscript(_ lookup: I.Type) -> I? {
-		return i
-	}
+    subscript(_ lookup: I.Type) -> I? {
+        return i
+    }
 }
 
 /// See `Poly` for documentation
 public enum Poly9<A, B, C, D, E, F, G, H, I>: _Poly9 {
-	case a(A)
-	case b(B)
-	case c(C)
-	case d(D)
-	case e(E)
-	case f(F)
-	case g(G)
-	case h(H)
-	case i(I)
-
-	public var a: A? {
-		guard case let .a(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ a: A) {
-		self = .a(a)
-	}
-
-	public var b: B? {
-		guard case let .b(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ b: B) {
-		self = .b(b)
-	}
-
-	public var c: C? {
-		guard case let .c(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ c: C) {
-		self = .c(c)
-	}
-
-	public var d: D? {
-		guard case let .d(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ d: D) {
-		self = .d(d)
-	}
-
-	public var e: E? {
-		guard case let .e(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ e: E) {
-		self = .e(e)
-	}
-
-	public var f: F? {
-		guard case let .f(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ f: F) {
-		self = .f(f)
-	}
-
-	public var g: G? {
-		guard case let .g(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ g: G) {
-		self = .g(g)
-	}
-
-	public var h: H? {
-		guard case let .h(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ h: H) {
-		self = .h(h)
-	}
-
-	public var i: I? {
-		guard case let .i(ret) = self else { return nil }
-		return ret
-	}
-
-	public init(_ i: I) {
-		self = .i(i)
-	}
-
+    case a(A)
+    case b(B)
+    case c(C)
+    case d(D)
+    case e(E)
+    case f(F)
+    case g(G)
+    case h(H)
+    case i(I)
+    case none
+    
+    public var a: A? {
+        guard case let .a(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ a: A) {
+        self = .a(a)
+    }
+    
+    public var b: B? {
+        guard case let .b(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ b: B) {
+        self = .b(b)
+    }
+    
+    public var c: C? {
+        guard case let .c(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ c: C) {
+        self = .c(c)
+    }
+    
+    public var d: D? {
+        guard case let .d(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ d: D) {
+        self = .d(d)
+    }
+    
+    public var e: E? {
+        guard case let .e(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ e: E) {
+        self = .e(e)
+    }
+    
+    public var f: F? {
+        guard case let .f(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ f: F) {
+        self = .f(f)
+    }
+    
+    public var g: G? {
+        guard case let .g(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ g: G) {
+        self = .g(g)
+    }
+    
+    public var h: H? {
+        guard case let .h(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ h: H) {
+        self = .h(h)
+    }
+    
+    public var i: I? {
+        guard case let .i(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ i: I) {
+        self = .i(i)
+    }
+    
     public var value: Any {
         switch self {
         case .a(let ret): return ret
@@ -796,6 +813,7 @@ public enum Poly9<A, B, C, D, E, F, G, H, I>: _Poly9 {
         case .g(let ret): return ret
         case .h(let ret): return ret
         case .i(let ret): return ret
+        case .none: return noneValue
         }
     }
 }
@@ -805,10 +823,10 @@ extension Poly9: Equatable where A: Equatable, B: Equatable, C: Equatable, D: Eq
 // MARK: - 10 types
 public protocol _Poly10: _Poly9 {
     associatedtype J
-
+    
     /// Get the value if it is of type `J`
     var j: J? { get }
-
+    
     init(_ j: J)
 }
 
@@ -830,97 +848,98 @@ public enum Poly10<A, B, C, D, E, F, G, H, I, J>: _Poly10 {
     case h(H)
     case i(I)
     case j(J)
-
+    case none
+    
     public var a: A? {
         guard case let .a(ret) = self else { return nil }
         return ret
     }
-
+    
     public init(_ a: A) {
         self = .a(a)
     }
-
+    
     public var b: B? {
         guard case let .b(ret) = self else { return nil }
         return ret
     }
-
+    
     public init(_ b: B) {
         self = .b(b)
     }
-
+    
     public var c: C? {
         guard case let .c(ret) = self else { return nil }
         return ret
     }
-
+    
     public init(_ c: C) {
         self = .c(c)
     }
-
+    
     public var d: D? {
         guard case let .d(ret) = self else { return nil }
         return ret
     }
-
+    
     public init(_ d: D) {
         self = .d(d)
     }
-
+    
     public var e: E? {
         guard case let .e(ret) = self else { return nil }
         return ret
     }
-
+    
     public init(_ e: E) {
         self = .e(e)
     }
-
+    
     public var f: F? {
         guard case let .f(ret) = self else { return nil }
         return ret
     }
-
+    
     public init(_ f: F) {
         self = .f(f)
     }
-
+    
     public var g: G? {
         guard case let .g(ret) = self else { return nil }
         return ret
     }
-
+    
     public init(_ g: G) {
         self = .g(g)
     }
-
+    
     public var h: H? {
         guard case let .h(ret) = self else { return nil }
         return ret
     }
-
+    
     public init(_ h: H) {
         self = .h(h)
     }
-
+    
     public var i: I? {
         guard case let .i(ret) = self else { return nil }
         return ret
     }
-
+    
     public init(_ i: I) {
         self = .i(i)
     }
-
+    
     public var j: J? {
         guard case let .j(ret) = self else { return nil }
         return ret
     }
-
+    
     public init(_ j: J) {
         self = .j(j)
     }
-
+    
     public var value: Any {
         switch self {
         case .a(let ret): return ret
@@ -933,6 +952,7 @@ public enum Poly10<A, B, C, D, E, F, G, H, I, J>: _Poly10 {
         case .h(let ret): return ret
         case .i(let ret): return ret
         case .j(let ret): return ret
+        case .none: return noneValue
         }
     }
 }
@@ -942,10 +962,10 @@ extension Poly10: Equatable where A: Equatable, B: Equatable, C: Equatable, D: E
 // MARK: - 11 types
 public protocol _Poly11: _Poly10 {
     associatedtype K
-
+    
     /// Get the value if it is of type `K`
     var k: K? { get }
-
+    
     init(_ k: K)
 }
 
@@ -968,106 +988,107 @@ public enum Poly11<A, B, C, D, E, F, G, H, I, J, K>: _Poly11 {
     case i(I)
     case j(J)
     case k(K)
-
+    case none
+    
     public var a: A? {
         guard case let .a(ret) = self else { return nil }
         return ret
     }
-
+    
     public init(_ a: A) {
         self = .a(a)
     }
-
+    
     public var b: B? {
         guard case let .b(ret) = self else { return nil }
         return ret
     }
-
+    
     public init(_ b: B) {
         self = .b(b)
     }
-
+    
     public var c: C? {
         guard case let .c(ret) = self else { return nil }
         return ret
     }
-
+    
     public init(_ c: C) {
         self = .c(c)
     }
-
+    
     public var d: D? {
         guard case let .d(ret) = self else { return nil }
         return ret
     }
-
+    
     public init(_ d: D) {
         self = .d(d)
     }
-
+    
     public var e: E? {
         guard case let .e(ret) = self else { return nil }
         return ret
     }
-
+    
     public init(_ e: E) {
         self = .e(e)
     }
-
+    
     public var f: F? {
         guard case let .f(ret) = self else { return nil }
         return ret
     }
-
+    
     public init(_ f: F) {
         self = .f(f)
     }
-
+    
     public var g: G? {
         guard case let .g(ret) = self else { return nil }
         return ret
     }
-
+    
     public init(_ g: G) {
         self = .g(g)
     }
-
+    
     public var h: H? {
         guard case let .h(ret) = self else { return nil }
         return ret
     }
-
+    
     public init(_ h: H) {
         self = .h(h)
     }
-
+    
     public var i: I? {
         guard case let .i(ret) = self else { return nil }
         return ret
     }
-
+    
     public init(_ i: I) {
         self = .i(i)
     }
-
+    
     public var j: J? {
         guard case let .j(ret) = self else { return nil }
         return ret
     }
-
+    
     public init(_ j: J) {
         self = .j(j)
     }
-
+    
     public var k: K? {
         guard case let .k(ret) = self else { return nil }
         return ret
     }
-
+    
     public init(_ k: K) {
         self = .k(k)
     }
-
+    
     public var value: Any {
         switch self {
         case .a(let ret): return ret
@@ -1081,8 +1102,525 @@ public enum Poly11<A, B, C, D, E, F, G, H, I, J, K>: _Poly11 {
         case .i(let ret): return ret
         case .j(let ret): return ret
         case .k(let ret): return ret
+        case .none: return noneValue
         }
     }
 }
 
 extension Poly11: Equatable where A: Equatable, B: Equatable, C: Equatable, D: Equatable, E: Equatable, F: Equatable, G: Equatable, H: Equatable, I: Equatable, J: Equatable, K: Equatable {}
+
+// MARK: - 12 types
+public protocol _Poly12: _Poly11 {
+    associatedtype L
+    
+    /// Get the value if it is of type `L`
+    var l: L? { get }
+    
+    init(_ l: L)
+}
+
+public extension _Poly12 {
+    subscript(_ lookup: L.Type) -> L? {
+        return l
+    }
+}
+
+/// See `Poly` for documentation
+public enum Poly12<A, B, C, D, E, F, G, H, I, J, K, L>: _Poly12 {
+    case a(A)
+    case b(B)
+    case c(C)
+    case d(D)
+    case e(E)
+    case f(F)
+    case g(G)
+    case h(H)
+    case i(I)
+    case j(J)
+    case k(K)
+    case l(L)
+    case none
+    
+    public var a: A? {
+        guard case let .a(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ a: A) {
+        self = .a(a)
+    }
+    
+    public var b: B? {
+        guard case let .b(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ b: B) {
+        self = .b(b)
+    }
+    
+    public var c: C? {
+        guard case let .c(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ c: C) {
+        self = .c(c)
+    }
+    
+    public var d: D? {
+        guard case let .d(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ d: D) {
+        self = .d(d)
+    }
+    
+    public var e: E? {
+        guard case let .e(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ e: E) {
+        self = .e(e)
+    }
+    
+    public var f: F? {
+        guard case let .f(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ f: F) {
+        self = .f(f)
+    }
+    
+    public var g: G? {
+        guard case let .g(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ g: G) {
+        self = .g(g)
+    }
+    
+    public var h: H? {
+        guard case let .h(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ h: H) {
+        self = .h(h)
+    }
+    
+    public var i: I? {
+        guard case let .i(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ i: I) {
+        self = .i(i)
+    }
+    
+    public var j: J? {
+        guard case let .j(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ j: J) {
+        self = .j(j)
+    }
+    
+    public var k: K? {
+        guard case let .k(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ k: K) {
+        self = .k(k)
+    }
+    
+    public var l: L? {
+        guard case let .l(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ l: L) {
+        self = .l(l)
+    }
+    
+    public var value: Any {
+        switch self {
+        case .a(let ret): return ret
+        case .b(let ret): return ret
+        case .c(let ret): return ret
+        case .d(let ret): return ret
+        case .e(let ret): return ret
+        case .f(let ret): return ret
+        case .g(let ret): return ret
+        case .h(let ret): return ret
+        case .i(let ret): return ret
+        case .j(let ret): return ret
+        case .k(let ret): return ret
+        case .l(let ret): return ret
+        case .none: return noneValue
+        }
+    }
+}
+
+extension Poly12: Equatable where A: Equatable, B: Equatable, C: Equatable, D: Equatable, E: Equatable, F: Equatable, G: Equatable, H: Equatable, I: Equatable, J: Equatable, K: Equatable, L: Equatable {}
+
+// MARK: - 13 types
+public protocol _Poly13: _Poly12 {
+    associatedtype M
+    
+    /// Get the value if it is of type `L`
+    var m: M? { get }
+    
+    init(_ m: M)
+}
+
+public extension _Poly13 {
+    subscript(_ lookup: M.Type) -> M? {
+        return m
+    }
+}
+
+/// See `Poly` for documentation
+public enum Poly13<A, B, C, D, E, F, G, H, I, J, K, L, M>: _Poly13 {
+    case a(A)
+    case b(B)
+    case c(C)
+    case d(D)
+    case e(E)
+    case f(F)
+    case g(G)
+    case h(H)
+    case i(I)
+    case j(J)
+    case k(K)
+    case l(L)
+    case m(M)
+    case none
+    
+    public var a: A? {
+        guard case let .a(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ a: A) {
+        self = .a(a)
+    }
+    
+    public var b: B? {
+        guard case let .b(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ b: B) {
+        self = .b(b)
+    }
+    
+    public var c: C? {
+        guard case let .c(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ c: C) {
+        self = .c(c)
+    }
+    
+    public var d: D? {
+        guard case let .d(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ d: D) {
+        self = .d(d)
+    }
+    
+    public var e: E? {
+        guard case let .e(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ e: E) {
+        self = .e(e)
+    }
+    
+    public var f: F? {
+        guard case let .f(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ f: F) {
+        self = .f(f)
+    }
+    
+    public var g: G? {
+        guard case let .g(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ g: G) {
+        self = .g(g)
+    }
+    
+    public var h: H? {
+        guard case let .h(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ h: H) {
+        self = .h(h)
+    }
+    
+    public var i: I? {
+        guard case let .i(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ i: I) {
+        self = .i(i)
+    }
+    
+    public var j: J? {
+        guard case let .j(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ j: J) {
+        self = .j(j)
+    }
+    
+    public var k: K? {
+        guard case let .k(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ k: K) {
+        self = .k(k)
+    }
+    
+    public var l: L? {
+        guard case let .l(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ l: L) {
+        self = .l(l)
+    }
+    
+    public var m: M? {
+        guard case let .m(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ m: M) {
+        self = .m(m)
+    }
+    
+    public var value: Any {
+        switch self {
+        case .a(let ret): return ret
+        case .b(let ret): return ret
+        case .c(let ret): return ret
+        case .d(let ret): return ret
+        case .e(let ret): return ret
+        case .f(let ret): return ret
+        case .g(let ret): return ret
+        case .h(let ret): return ret
+        case .i(let ret): return ret
+        case .j(let ret): return ret
+        case .k(let ret): return ret
+        case .l(let ret): return ret
+        case .m(let ret): return ret
+        case .none: return noneValue
+        }
+    }
+}
+
+extension Poly13: Equatable where A: Equatable, B: Equatable, C: Equatable, D: Equatable, E: Equatable, F: Equatable, G: Equatable, H: Equatable, I: Equatable, J: Equatable, K: Equatable, L: Equatable, M: Equatable {}
+
+// MARK: - 14 types
+public protocol _Poly14: _Poly13 {
+    associatedtype N
+    
+    /// Get the value if it is of type `L`
+    var n: N? { get }
+    
+    init(_ n: N)
+}
+
+public extension _Poly14 {
+    subscript(_ lookup: N.Type) -> N? {
+        return n
+    }
+}
+
+/// See `Poly` for documentation
+public enum Poly14<A, B, C, D, E, F, G, H, I, J, K, L, M, N>: _Poly14 {
+    case a(A)
+    case b(B)
+    case c(C)
+    case d(D)
+    case e(E)
+    case f(F)
+    case g(G)
+    case h(H)
+    case i(I)
+    case j(J)
+    case k(K)
+    case l(L)
+    case m(M)
+    case n(N)
+    case none
+    
+    public var a: A? {
+        guard case let .a(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ a: A) {
+        self = .a(a)
+    }
+    
+    public var b: B? {
+        guard case let .b(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ b: B) {
+        self = .b(b)
+    }
+    
+    public var c: C? {
+        guard case let .c(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ c: C) {
+        self = .c(c)
+    }
+    
+    public var d: D? {
+        guard case let .d(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ d: D) {
+        self = .d(d)
+    }
+    
+    public var e: E? {
+        guard case let .e(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ e: E) {
+        self = .e(e)
+    }
+    
+    public var f: F? {
+        guard case let .f(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ f: F) {
+        self = .f(f)
+    }
+    
+    public var g: G? {
+        guard case let .g(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ g: G) {
+        self = .g(g)
+    }
+    
+    public var h: H? {
+        guard case let .h(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ h: H) {
+        self = .h(h)
+    }
+    
+    public var i: I? {
+        guard case let .i(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ i: I) {
+        self = .i(i)
+    }
+    
+    public var j: J? {
+        guard case let .j(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ j: J) {
+        self = .j(j)
+    }
+    
+    public var k: K? {
+        guard case let .k(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ k: K) {
+        self = .k(k)
+    }
+    
+    public var l: L? {
+        guard case let .l(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ l: L) {
+        self = .l(l)
+    }
+    
+    public var m: M? {
+        guard case let .m(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ m: M) {
+        self = .m(m)
+    }
+    
+    public var n: N? {
+        guard case let .n(ret) = self else { return nil }
+        return ret
+    }
+    
+    public init(_ n: N) {
+        self = .n(n)
+    }
+    
+    public var value: Any {
+        switch self {
+        case .a(let ret): return ret
+        case .b(let ret): return ret
+        case .c(let ret): return ret
+        case .d(let ret): return ret
+        case .e(let ret): return ret
+        case .f(let ret): return ret
+        case .g(let ret): return ret
+        case .h(let ret): return ret
+        case .i(let ret): return ret
+        case .j(let ret): return ret
+        case .k(let ret): return ret
+        case .l(let ret): return ret
+        case .m(let ret): return ret
+        case .n(let ret): return ret
+        case .none: return noneValue
+        }
+    }
+}
+
+extension Poly14: Equatable where A: Equatable, B: Equatable, C: Equatable, D: Equatable, E: Equatable, F: Equatable, G: Equatable, H: Equatable, I: Equatable, J: Equatable, K: Equatable, L: Equatable, M: Equatable, N: Equatable {}
